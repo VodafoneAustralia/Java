@@ -3,6 +3,12 @@ package bowling.dedios.erskine;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Calculates the total bowling score
+ * 
+ * @author ededios
+ *
+ */
 public class Bowling {
 
 	private final int MAX_FRAMES = 10;
@@ -13,13 +19,19 @@ public class Bowling {
 		frames.add(new Frame());
 	}
 	
-	public void roll(int ... pinScores) {
+	public void roll(final int ... pinScores) {
 		for (int pinsDowned : pinScores) {
 			roll(pinsDowned);
 		}
 	}
 
-	public void roll(int pinsDowned) {
+	/**
+	 * Adds pinsDowned as a frame score.
+	 * Throws an exception if roll is called after maximum number of possible rolls is reached
+	 * 
+	 * @param pinsDowned
+	 */
+	public void roll(final int pinsDowned) {
 		final Frame currentFrame = frames.get(frames.size() - 1);
 		
 		if (!currentFrame.isComplete() && frames.size() <= MAX_FRAMES) {
@@ -28,13 +40,13 @@ public class Bowling {
 			final Frame newFrame = new Frame();
 			newFrame.addScore(pinsDowned);
 			frames.add(newFrame);
-		} else if (currentFrame.isComplete() && frames.size() == MAX_FRAMES && (currentFrame.isSpare() || currentFrame.isStrike())) {
+		} else if (isFirstExtraRollAllowedOnFirstExtraFrame(currentFrame)) {
 			final Frame newFrame = new Frame();
 			newFrame.addScore(pinsDowned);
 			frames.add(newFrame);
-		} else if (!currentFrame.isComplete() && frames.size() == MAX_FRAMES + 1 && frames.get(MAX_FRAMES - 1).isStrike()) {
+		} else if (isSecondExtraRollAllowedOnFirstExtraFrame(currentFrame)) {
 			currentFrame.addScore(pinsDowned);
-		} else if (currentFrame.isComplete() && frames.size() == MAX_FRAMES + 1 && frames.get(MAX_FRAMES - 1).isStrike() && frames.get(MAX_FRAMES - 1).isStrike() && currentFrame.isStrike()) {
+		} else if (isSecondExtraRollAllowedOnSecondExtraFrame(currentFrame)) {
 			final Frame newFrame = new Frame();
 			newFrame.addScore(pinsDowned);
 			frames.add(newFrame);			
@@ -42,7 +54,22 @@ public class Bowling {
 			throw new IllegalArgumentException("Game is complete.  Cannot add score " + pinsDowned + ".");
 		}
 	}
+	
+	private boolean isFirstExtraRollAllowedOnFirstExtraFrame(final Frame currentFrame) {
+		return currentFrame.isComplete() && frames.size() == MAX_FRAMES && (currentFrame.isSpare() || currentFrame.isStrike());
+	}
+	
+	private boolean isSecondExtraRollAllowedOnFirstExtraFrame(final Frame currentFrame) {
+		return !currentFrame.isComplete() && frames.size() == MAX_FRAMES + 1 && frames.get(MAX_FRAMES - 1).isStrike();
+	}
+	private boolean isSecondExtraRollAllowedOnSecondExtraFrame(final Frame currentFrame) {
+		return currentFrame.isComplete() && frames.size() == MAX_FRAMES + 1 && frames.get(MAX_FRAMES - 1).isStrike() && frames.get(MAX_FRAMES - 1).isStrike() && currentFrame.isStrike();
+	}
 
+	/**
+	 * 
+	 * @return total bowling score
+	 */
 	public int tallyScore() {
 		int total = 0;
 
