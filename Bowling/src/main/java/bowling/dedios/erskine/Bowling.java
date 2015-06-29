@@ -34,36 +34,34 @@ public class Bowling {
 	public void roll(final int pinsDowned) {
 		final Frame currentFrame = frames.get(frames.size() - 1);
 		
-		if (!currentFrame.isComplete() && frames.size() <= MAX_FRAMES) {
+		if (isRollAllowedOnOpenFrame(currentFrame) || isSecondExtraRollAllowedOnFirstExtraFrame(currentFrame)) {
 			currentFrame.addScore(pinsDowned);
-		} else if (currentFrame.isComplete() && frames.size() < MAX_FRAMES) {
+		} else if (isRollAllowedOnNewFrame(currentFrame) || isFirstExtraRollAllowedOnFirstExtraFrame(currentFrame) || isSecondExtraRollAllowedOnSecondExtraFrame(currentFrame)) {
 			final Frame newFrame = new Frame();
 			newFrame.addScore(pinsDowned);
-			frames.add(newFrame);
-		} else if (isFirstExtraRollAllowedOnFirstExtraFrame(currentFrame)) {
-			final Frame newFrame = new Frame();
-			newFrame.addScore(pinsDowned);
-			frames.add(newFrame);
-		} else if (isSecondExtraRollAllowedOnFirstExtraFrame(currentFrame)) {
-			currentFrame.addScore(pinsDowned);
-		} else if (isSecondExtraRollAllowedOnSecondExtraFrame(currentFrame)) {
-			final Frame newFrame = new Frame();
-			newFrame.addScore(pinsDowned);
-			frames.add(newFrame);			
+			frames.add(newFrame);		
 		} else {
 			throw new IllegalArgumentException("Game is complete.  Cannot add score " + pinsDowned + ".");
 		}
 	}
 	
+	private boolean isRollAllowedOnOpenFrame(final Frame currentFrame) {
+		return !currentFrame.isClosed() && frames.size() <= MAX_FRAMES;
+	}
+	
+	private boolean isRollAllowedOnNewFrame(final Frame currentFrame) {
+		return currentFrame.isClosed() && frames.size() < MAX_FRAMES;
+	}
+	
 	private boolean isFirstExtraRollAllowedOnFirstExtraFrame(final Frame currentFrame) {
-		return currentFrame.isComplete() && frames.size() == MAX_FRAMES && (currentFrame.isSpare() || currentFrame.isStrike());
+		return currentFrame.isClosed() && frames.size() == MAX_FRAMES && (currentFrame.isSpare() || currentFrame.isStrike());
 	}
 	
 	private boolean isSecondExtraRollAllowedOnFirstExtraFrame(final Frame currentFrame) {
-		return !currentFrame.isComplete() && frames.size() == MAX_FRAMES + 1 && frames.get(MAX_FRAMES - 1).isStrike();
+		return !currentFrame.isClosed() && frames.size() == MAX_FRAMES + 1 && frames.get(MAX_FRAMES - 1).isStrike();
 	}
 	private boolean isSecondExtraRollAllowedOnSecondExtraFrame(final Frame currentFrame) {
-		return currentFrame.isComplete() && frames.size() == MAX_FRAMES + 1 && frames.get(MAX_FRAMES - 1).isStrike() && frames.get(MAX_FRAMES - 1).isStrike() && currentFrame.isStrike();
+		return currentFrame.isClosed() && frames.size() == MAX_FRAMES + 1 && frames.get(MAX_FRAMES - 1).isStrike() && frames.get(MAX_FRAMES - 1).isStrike() && currentFrame.isStrike();
 	}
 
 	/**

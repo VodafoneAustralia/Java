@@ -36,7 +36,7 @@ public class Frame {
 				throw new IllegalArgumentException("Second roll score of " + rollScore + " is invalid.  Total frame score cannot exceed 10.");
 			}
 		} else {
-			throw new IllegalArgumentException("Cannot add rollScore " + rollScore + ".  Frame is complete. " + scores[0] + " " + scores[1]);
+			throw new IllegalArgumentException("Cannot add rollScore " + rollScore + ".  Frame is closed. " + scores[0] + " " + scores[1]);
 		}
 	}
 	
@@ -44,7 +44,7 @@ public class Frame {
 	 * 
 	 * @return true if first score is 10 or both first and seconds scores have a value > -1 
 	 */
-	public boolean isComplete() {
+	public boolean isClosed() {
 		return scores[0] == 10 || (scores[0] != -1 && scores[1] != -1);
 	}
 	

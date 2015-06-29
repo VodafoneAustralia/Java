@@ -15,7 +15,7 @@ public class FrameTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowExceptionWhenAddingScoreIfFrameIsComplete() {
+	public void shouldThrowExceptionWhenAddingScoreIfFrameIsClosed() {
 		final Frame testFrame = new Frame();
 		testFrame.addScore(1);
 		testFrame.addScore(2);
