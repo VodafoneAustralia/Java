@@ -10,4 +10,3 @@ Run the jar file.
 ie.
 
 java -jar Bowling-1.0-SNAPSHOT.jar 1 2 3 4
-java -jar Bowling-1.0-SNAPSHOT.jar 9 1 9 1
