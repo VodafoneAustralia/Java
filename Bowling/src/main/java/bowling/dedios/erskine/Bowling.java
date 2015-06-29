@@ -21,12 +21,23 @@ public class Bowling {
 
 	public void roll(int pinsDowned) {
 		final Frame currentFrame = frames.get(frames.size() - 1);
-		if (!currentFrame.isComplete()) {
+		
+		if (!currentFrame.isComplete() && frames.size() <= MAX_FRAMES) {
 			currentFrame.addScore(pinsDowned);
-		} else if (frames.size() <= MAX_FRAMES + 1) {
+		} else if (currentFrame.isComplete() && frames.size() < MAX_FRAMES) {
 			final Frame newFrame = new Frame();
 			newFrame.addScore(pinsDowned);
 			frames.add(newFrame);
+		} else if (currentFrame.isComplete() && frames.size() == MAX_FRAMES && (currentFrame.isSpare() || currentFrame.isStrike())) {
+			final Frame newFrame = new Frame();
+			newFrame.addScore(pinsDowned);
+			frames.add(newFrame);
+		} else if (!currentFrame.isComplete() && frames.size() == MAX_FRAMES + 1 && frames.get(MAX_FRAMES - 1).isStrike()) {
+			currentFrame.addScore(pinsDowned);
+		} else if (currentFrame.isComplete() && frames.size() == MAX_FRAMES + 1 && frames.get(MAX_FRAMES - 1).isStrike() && frames.get(MAX_FRAMES - 1).isStrike() && currentFrame.isStrike()) {
+			final Frame newFrame = new Frame();
+			newFrame.addScore(pinsDowned);
+			frames.add(newFrame);			
 		} else {
 			throw new IllegalArgumentException("Game is complete.  Cannot add score " + pinsDowned + ".");
 		}

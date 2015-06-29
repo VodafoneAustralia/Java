@@ -34,6 +34,34 @@ public class BowlingTest {
 	}
 	
 	@Test
+	public void shouldAllowExtra2RollsWithStrikeOnTenthFrame() {
+		Bowling bowling = new Bowling();
+		bowling.roll(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10);
+		assertEquals(48, bowling.tallyScore());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldDisAllowExtra3RollsWithStrikeOnTenthFrame() {
+		Bowling bowling = new Bowling();
+		bowling.roll(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 10, 10, 1);
+		assertEquals(30, bowling.tallyScore());
+	}
+	
+	@Test
+	public void shouldAllowExtra1RollWithSpareOnTenthFrame() {
+		Bowling bowling = new Bowling();
+		bowling.roll(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 1, 10);
+		assertEquals(38, bowling.tallyScore());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldDisallowExtra2RollsWithSpareOnTenthFrame() {
+		Bowling bowling = new Bowling();
+		bowling.roll(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 1, 10, 1);
+		assertEquals(29, bowling.tallyScore());
+	}
+	
+	@Test
 	public void shouldGetIncompleteScore() {
 		Bowling bowling = new Bowling();
 		bowling.roll(1, 2, 3);
