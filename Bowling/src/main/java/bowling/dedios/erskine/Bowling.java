@@ -74,22 +74,29 @@ public class Bowling {
 		for (int frameCount = 0; (frameCount < frames.size() && frameCount < 10); frameCount++) {
 			final Frame currentFrame = frames.get(frameCount);
 			total = total + currentFrame.getTotalScore();
+			
 			if (currentFrame.isSpare() && frameCount < frames.size() - 1) {
 				total = total + frames.get(frameCount + 1).getFirstScore();
-			} else if (currentFrame.isStrike()) {
-				if (frameCount < frames.size() - 1) {
-					total = total + frames.get(frameCount + 1).getFirstScore();					
+			} else if (currentFrame.isStrike() && frameCount < frames.size() - 1) {
+				total = total + frames.get(frameCount + 1).getFirstScore();					
 
-					if (frames.get(frameCount + 1).getSecondScore() != -1) {
-						total = total + frames.get(frameCount + 1).getSecondScore();
-					} else if (frameCount < frames.size() - 2) {
-						total = total + frames.get(frameCount + 2).getFirstScore();
-					}
+				if (isNextFrameSecondScoreValid(frameCount)) {
+					total = total + frames.get(frameCount + 1).getSecondScore();
+				} else if (isNextAfterNextFrameFirstScoreValid(frameCount)) {
+					total = total + frames.get(frameCount + 2).getFirstScore();
 				}
 			}
 		}
 
 		return total;
+	}
+	
+	private boolean isNextFrameSecondScoreValid(final int frameCount) {
+		return frames.get(frameCount + 1).getSecondScore() != -1;
+	}
+	
+	private boolean isNextAfterNextFrameFirstScoreValid(final int frameCount) {
+		return frameCount < frames.size() - 2;
 	}
 
 	public static void main(final String[] args) {
